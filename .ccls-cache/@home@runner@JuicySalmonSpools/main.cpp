@@ -19,16 +19,21 @@
 #include <string>
 #include <vector> // std::vector
 
-void print_spaces(std::string s, int curr_lvl, int max_lvl) {
-  for (int tab = 0; tab <= (max_lvl - curr_lvl); tab++) {
+void print_spaces(std::string s, int curr_lvl, int max_lvl)
+{
+  for (int tab = 0; tab <= (max_lvl - curr_lvl); tab++)
+  {
     std::cout << "     ";
   }
 }
 
-void print_lines(int curr_lvl, int max_lvl) {
+void print_lines(int curr_lvl, int max_lvl)
+{
   print_spaces("    ", curr_lvl, max_lvl);
-  for (int l = 0; l < curr_lvl; l++) {
-    if (l != 0) {
+  for (int l = 0; l < curr_lvl; l++)
+  {
+    if (l != 0)
+    {
       print_spaces("    ", curr_lvl - 1, max_lvl);
     }
     std::cout << "/";
@@ -38,80 +43,110 @@ void print_lines(int curr_lvl, int max_lvl) {
   std::cout << "\n";
 }
 
-void print_heap(std::string msg, std::vector<int> vec) {
+void print_heap(std::string msg, std::vector<int> vec)
+{
 
   std::cout << "\t" << msg << std::endl;
   int max_lvl = ilogb(vec.size());
   int prev_lvl = 0;
 
-  for (int i = 0; i < vec.size(); i++) {
+  for (int i = 0; i < vec.size(); i++)
+  {
     bool do_write_lines;
     int num = vec[i];
     int curr_lvl = ilogb(i + 1);
     // std::cout << curr_lvl;
-    if (i != 0 && (ilogb(i) - curr_lvl) != 0) {
+    if (i != 0 && (ilogb(i) - curr_lvl) != 0)
+    {
       std::cout << "\n";
       print_lines(curr_lvl, max_lvl);
     }
-    for (int tab = 0; tab <= (max_lvl - curr_lvl); tab++) {
+    for (int tab = 0; tab <= (max_lvl - curr_lvl); tab++)
+    {
       std::cout << "    ";
     }
     std::cout << " " << num << " ";
   }
+  std::cout << "\n";
 }
 
-void print_vector(std::vector<int> vec) {
+void print_vector(std::vector<int> vec)
+{
   std::cout << "[";
-  for (int a : vec) {
+  for (int a : vec)
+  {
     std::cout << a << ", ";
   }
   std::cout << "]";
   std::cout << "\n";
 }
 
-void print_minheap(
-    std::priority_queue<int, std::vector<int>, std::greater<int>> prio_queue) {}
+std::vector<int> vector_from_prioq(std::priority_queue<int, std::vector<int>, std::greater<int>> prio_queue)
+{
+  std::vector<int> out_vec;
+  while (prio_queue.size())
+  {
+    int num = prio_queue.top();
+    out_vec.push_back(num);
+    prio_queue.pop();
+  }
+  return out_vec;
+}
 
-int main() {
+int main()
+{
   std::cout << "init" << std::endl;
 
   // std::vector<int> v = {1,13,4,10,6,9,15};
   std::vector<int> v;
-  print_vector(v);
+  std::priority_queue<int, std::vector<int>, std::greater<int>> prio_queue;
+  // print_vector(v);
 
-  std::priority_queue<int, std::vector<int>, std::greater<int>> prio_queue(
-      v.begin(), v.end());
+  prio_queue = std::priority_queue<int, std::vector<int>, std::greater<int>>(v.begin(), v.end());
 
   bool do_loop = true;
-
-  do {
-    char in ='f';
-    try {
+  do
+  {
+    // for (int s = 0; s < 100; s++)
+    // {
+    //   std::cout << "\n";
+    // } // fake clear screen
+    char in = 'f';
+    try
+    {
       std::cout << "Choose Option: \n a)Insert Number \n b)End and Pop Element"
                 << std::endl;
       std::cin >> in;
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e)
+    {
       std::cerr << e.what() << '\n';
     }
-    if (in == 'a') {
+    if (in == 'a')
+    {
       int num_in;
-      try {
+      try
+      {
         std::cout << "Insert Number: ";
         std::cin >> num_in;
-      } catch (const std::exception &e) {
+      }
+      catch (const std::exception &e)
+      {
         // std::cerr << e.what() << '\n';
         std::cout << "Invalid Number";
       }
       v.push_back(num_in);
-      print_vector(v);
 
-      std::priority_queue<int, std::vector<int>, std::greater<int>> prio_queue(
-          v.begin(), v.end());
-      print_minheap(prio_queue);
+      prio_queue = std::priority_queue<int, std::vector<int>, std::greater<int>>(v.begin(), v.end());
+      v = vector_from_prioq(prio_queue);
+      print_vector(v);
+      print_heap("    ", v);
     }
-    if (in == 'b') {
+    if (in == 'b')
+    {
       do_loop = false;
     }
+
   } while (do_loop);
 
   // Pop Element
@@ -120,17 +155,13 @@ int main() {
 
   // Print Vector
   std::vector<int> final_vector;
-  while (prio_queue.size()) {
-    int num = prio_queue.top();
-    final_vector.push_back(num);
-    prio_queue.pop();
-  }
+  final_vector = vector_from_prioq(prio_queue);
   print_vector(final_vector);
 
   // Print queue
-  std::priority_queue<int, std::vector<int>, std::greater<int>> new_prio_queue(
-      final_vector.begin(), final_vector.end());
-  print_minheap(new_prio_queue);
+  prio_queue = std::priority_queue<int, std::vector<int>, std::greater<int>>(final_vector.begin(), final_vector.end());
+  final_vector = vector_from_prioq(prio_queue);
+  print_heap("    ", final_vector);
   std::cout << "Finished" << std::endl;
   return 0;
 }
