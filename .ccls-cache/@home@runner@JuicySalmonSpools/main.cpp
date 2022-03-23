@@ -14,6 +14,7 @@
 // std::sort_heap
 #include <functional> // std::greater
 #include <iostream>   // std::cout
+#include <iomanip>
 #include <math.h>     /* ilogb */
 #include <queue>      // std::priority_queue
 #include <string>
@@ -23,7 +24,7 @@ void print_spaces(std::string s, int curr_lvl, int max_lvl)
 {
   for (int tab = 0; tab <= (max_lvl - curr_lvl); tab++)
   {
-    std::cout << "     ";
+    std::cout << s;
   }
 }
 
@@ -59,13 +60,13 @@ void print_heap(std::string msg, std::vector<int> vec)
     if (i != 0 && (ilogb(i) - curr_lvl) != 0)
     {
       std::cout << "\n";
-      print_lines(curr_lvl, max_lvl);
+      //print_lines(curr_lvl, max_lvl);
     }
     for (int tab = 0; tab <= (max_lvl - curr_lvl); tab++)
     {
       std::cout << "    ";
     }
-    std::cout << " " << num << " ";
+    std::cout << std::setw(2) << std::setfill('0') << num;
   }
   std::cout << "\n";
 }
